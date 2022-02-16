@@ -2,9 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use App\Manager\UserManager;
+use App\Service\AuthenticationService;
+use App\Service\DebugService;
 use Cacofony\BaseClasse\BaseController;
 use Cacofony\Helper\AuthHelper;
 use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 
 class SecurityController extends BaseController
 {
@@ -21,12 +26,16 @@ class SecurityController extends BaseController
      * @Route(path="/login")
      * @return void
      */
-    public function postLogin()
+    public function postLogin(AuthenticationService $authenticationService)
     {
-        // TODO - Validate credentials for real in DB and fill the payload with more infos
-        $jwt = JWT::encode(['user' => $this->HTTPRequest->getRequest('username')], $_ENV['APP_SECRET']);
-        $_SESSION['user_badge'] = $jwt;
-        $this->HTTPResponse->redirect('/');
+        $email = $this->HTTPRequest->getRequest('email');
+        $password = $this->HTTPRequest->getRequest('password');
+
+        if($authenticationService->auth($email, $password)) {
+            $this->HTTPResponse->redirect('/');
+        } else {
+            $this->HTTPResponse->redirect('/login?incorrect');
+        }
     }
 
     /**

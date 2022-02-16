@@ -7,7 +7,7 @@ use App\Entity\Post;
 
 <?php if (AuthHelper::isLoggedIn()) : ?>
     <div class="alert alert-success" role="alert">
-        Bonjour <?= AuthHelper::getLoggedUser()->user; ?>, vous êtes connecté ! <a href="/logout">Logout</a>
+        Bonjour <?= AuthHelper::getLoggedUser()->user->first_name; ?>, vous êtes connecté ! <a href="/logout">Logout</a>
     </div>
 <?php else: ?>
     <div class="alert alert-danger" role="alert">
