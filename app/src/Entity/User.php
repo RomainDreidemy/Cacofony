@@ -129,6 +129,7 @@ class User extends BaseEntity
     public function __toArray(): array
     {
         return [
+            'id' => $this->id,
             'email' => $this->email,
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
