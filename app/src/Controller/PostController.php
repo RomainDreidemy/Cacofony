@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Post;
+use App\Manager\UserManager;
 use App\Service\DebugService;
 use App\Service\PostService;
 use Cacofony\BaseClasse\BaseController;
@@ -82,11 +83,17 @@ class PostController extends BaseController
     /**
      * @Route(path="/article/{id}/delete", name="get_article_delete")
      */
-    public function getDelete(int $id) {
+    public function getDelete(int $id, PostService $postService, UserManager $userManager) {
         if (!AuthHelper::isLoggedIn()) {
             $this->HTTPResponse->redirect('/');
         }
 
         $user = AuthHelper::getLoggedUser();
+
+        $user = $userManager->findOneBy('id', $user->id);
+
+        $postService->delete($id, $user);
+
+        $this->HTTPResponse->redirect('/');
     }
 }

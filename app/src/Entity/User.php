@@ -110,7 +110,7 @@ class User extends BaseEntity
     /**
      * @return bool
      */
-    public function isIs_admin(): bool
+    public function getIs_admin(): bool
     {
         return $this->is_admin;
     }

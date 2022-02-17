@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Post;
+use App\Entity\User;
 use App\Manager\PostManager;
 
 class PostService
@@ -24,5 +25,21 @@ class PostService
         }
 
         return $post;
+    }
+
+    public function delete(int $postId, User $user): bool
+    {
+        if ($user->getIs_admin()) {
+            return $this->postManager->remove($postId);
+        } else {
+            /** @var Post $post */
+            $post = $this->postManager->findOneBy('id', $postId);
+
+            if ($post->getAuthorId() === $user->getId()) {
+                return $this->postManager->remove($postId);
+            } else {
+                return false;
+            }
+        }
     }
 }

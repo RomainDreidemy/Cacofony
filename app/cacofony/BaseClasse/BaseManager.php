@@ -90,4 +90,13 @@ abstract class BaseManager
 
         return $this->findOneBy('id', $this->pdo->lastInsertId());
     }
+
+    public function remove(int $id): bool {
+        $statement = $this->pdo->prepare("delete from `$this->shortEntityName` where id = :id");
+        $statement->bindValue('id', $id);
+
+        $statement->execute();
+
+        return true;
+    }
 }
