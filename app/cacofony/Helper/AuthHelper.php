@@ -28,7 +28,7 @@ class AuthHelper
         } catch (\Exception $e) {
             return false;
         }
-        return $user;
+        return $user->user;
     }
 
     public static function login(array $userInfos)

@@ -7,7 +7,7 @@ use App\Entity\Post;
 
 <?php if (AuthHelper::isLoggedIn()) : ?>
     <div class="alert alert-success" role="alert">
-        Bonjour <?= AuthHelper::getLoggedUser()->user->first_name; ?>, vous êtes connecté ! <a href="/logout">Logout</a>
+        Bonjour <?= AuthHelper::getLoggedUser()->first_name; ?>, vous êtes connecté ! <a href="/logout">Logout</a>
     </div>
 <?php else: ?>
     <div class="alert alert-danger" role="alert">
@@ -23,7 +23,7 @@ use App\Entity\Post;
 <ul>
     <?php /** @var $posts Post[] */
     foreach ($posts as $post) : ?>
-        <li><a href="/show/<?= $post->getId(); ?>-test"><?= $post->getTitle(); ?></a></li>
+        <li><a href="/article/<?= $post->getId(); ?>"><?= $post->getTitle(); ?></a></li>
     <?php endforeach; ?>
 </ul>
 

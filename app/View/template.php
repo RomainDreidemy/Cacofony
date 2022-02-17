@@ -1,3 +1,7 @@
+<?php
+    use Cacofony\Helper\AuthHelper;
+?>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -12,6 +16,36 @@
 <body>
 
 <div class="container my-5">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Navbar</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">Accueil</a>
+                    </li>
+                    <?php if (AuthHelper::isLoggedIn()):  ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/ecrire-un-article">Écrire un article</a>
+                        </li>
+
+                        <?php if (AuthHelper::getLoggedUser()->is_admin): ?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/liste-des-utilisateurs">Liste des utilisateurs</a>
+                            </li>
+                        <?php endif; ?>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="/logout">Se déconecter</a>
+                        </li>
+                    <?php endif; ?>
+                </ul>
+            </div>
+        </div>
+    </nav>
     <?= $content; ?>
 </div>
 

@@ -3,6 +3,7 @@
 namespace Cacofony\BaseClasse;
 
 
+use App\Service\DebugService;
 use Cacofony\Interfaces\FactoryInterface;
 
 abstract class BaseManager
@@ -69,5 +70,24 @@ abstract class BaseManager
         }
 
         return new $this->entityName($result);
+    }
+
+    public function create(array $properties): BaseEntity|bool
+    {
+
+        $keys = array_keys($properties);
+
+        $columns = '(' . implode(', ', $keys) . ')';
+        $values_prepared = '(:' . implode(', :', $keys) . ')';
+
+        $statement = $this->pdo->prepare("insert into `$this->shortEntityName` {$columns} values {$values_prepared}");
+
+        foreach ($properties as $key => $value) {
+            $statement->bindValue($key, $value);
+        }
+
+        $statement->execute();
+
+        return $this->findOneBy('id', $this->pdo->lastInsertId());
     }
 }
