@@ -81,6 +81,39 @@ class PostController extends BaseController
     }
 
     /**
+     * @Route(path="/article/{id}/update", name="get_article_update")
+     */
+    public function getUpdate(int $id, PostManager $postManager)
+    {
+        if (!AuthHelper::isLoggedIn() || !$post = $postManager->findOneBy('id', $id)) {
+            $this->HTTPResponse->redirect('/');
+        }
+
+        $this->render("{$this->VIEW_PATH}/update", ['post' => $post], 'Création d\'un article');
+    }
+
+    /**
+     * @Route(path="/article/{id}/update", name="get_article_update")
+     */
+    public function postUpdate(int $id, PostManager $postManager, PostService $postService, UserManager $userManager)
+    {
+        if (!AuthHelper::isLoggedIn()) {
+            $this->HTTPResponse->redirect('/');
+        }
+
+        $user = $userManager->findOneBy('id', AuthHelper::getLoggedUser()->id);
+
+        $title = $this->HTTPRequest->getRequest('title');
+        $content = $this->HTTPRequest->getRequest('content');
+
+        if ($postService->update($id, $user, $title, $content)) {
+            $this->HTTPResponse->redirect("/article/{$id}");
+        }
+
+//        $this->render("{$this->VIEW_PATH}/update", ['post' => $post], 'Création d\'un article');
+    }
+
+    /**
      * @Route(path="/article/{id}/delete", name="get_article_delete")
      */
     public function getDelete(int $id, PostService $postService, UserManager $userManager) {

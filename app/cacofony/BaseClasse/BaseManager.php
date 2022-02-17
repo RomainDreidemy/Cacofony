@@ -91,6 +91,29 @@ abstract class BaseManager
         return $this->findOneBy('id', $this->pdo->lastInsertId());
     }
 
+    public function update(int $id, array $properties): BaseEntity|bool
+    {
+        $querySetArray = [];
+
+        foreach ($properties as $key => $value) {
+            $querySetArray[] = "{$key} = :{$key}";
+        }
+
+        $querySetString = implode(', ', $querySetArray);
+
+        $statement = $this->pdo->prepare("update `$this->shortEntityName` set {$querySetString} where id = :id");
+
+        $statement->bindValue('id', $id);
+
+        foreach ($properties as $key => $value) {
+            $statement->bindValue($key, $value);
+        }
+
+        $statement->execute();
+
+        return $this->findOneBy('id', $id);
+    }
+
     public function remove(int $id): bool {
         $statement = $this->pdo->prepare("delete from `$this->shortEntityName` where id = :id");
         $statement->bindValue('id', $id);

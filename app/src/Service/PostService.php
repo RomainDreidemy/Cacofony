@@ -28,18 +28,30 @@ class PostService
     }
 
     public function delete(int $postId, User $user): bool
-    {
-        if ($user->getIs_admin()) {
-            return $this->postManager->remove($postId);
-        } else {
-            /** @var Post $post */
-            $post = $this->postManager->findOneBy('id', $postId);
+    {/** @var Post|false $post */
+        $post = $this->postManager->findOneBy('id', $postId);
 
-            if ($post->getAuthorId() === $user->getId()) {
-                return $this->postManager->remove($postId);
-            } else {
-                return false;
-            }
+        if ($post && $this->hasUserAccess($post, $user)) {
+            return $this->postManager->remove($postId);
         }
+
+        return false;
+    }
+
+    public function update(int $postId, User $user, string $title, string $content): Post|false
+    {
+        /** @var Post|false $post */
+        $post = $this->postManager->findOneBy('id', $postId);
+
+        if ($post && $this->hasUserAccess($post, $user)) {
+            return $this->postManager->update($postId, ['title' => $title, 'content' => $content]);
+        }
+
+        return false;
+    }
+
+    private function hasUserAccess(Post $post, User $user): bool
+    {
+        return $user->getIs_admin() || $user->getId() === $post->getAuthorId();
     }
 }
