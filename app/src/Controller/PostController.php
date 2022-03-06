@@ -51,8 +51,6 @@ class PostController extends BaseController
 
         $comments = $commentManager->getWithAuthorName($post->getId());
 
-        DebugService::debug($comments, false);
-
         $this->render("{$this->VIEW_PATH}/show", [
             'post' => $post,
             'comments' => $comments

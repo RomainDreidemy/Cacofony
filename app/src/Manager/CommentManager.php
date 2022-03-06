@@ -13,7 +13,7 @@ class CommentManager extends BaseManager
             INNER JOIN User u on u.id = c.authorId
             WHERE c.postId = :postId
         ");
-        $statement->bindValue('postId', 1);
+        $statement->bindValue('postId', $postId);
         $statement->execute();
         $statement->setFetchMode(\PDO::FETCH_ASSOC);
 

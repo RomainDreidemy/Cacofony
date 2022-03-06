@@ -18,12 +18,37 @@ use Cacofony\Helper\AuthHelper;
 
 <p><?= nl2br($post->getContent()); ?></p>
 
-<h2>Commentaires</h2>
-<?php foreach ($comments as $comment): ?>
-<div>
-    <h3><?= $comment['first_name'] ?></h3>
-    <span><?= $comment['publishedAt'] ?></span>
-    <p><?= $comment['content'] ?></p>
-</div>
+<hr>
 
-<?php endforeach; ?>
+<form method="post" action="/post/<?= $post->getId() ?>/comment" class="mb-5">
+    <div class="mb-3">
+        <label for="content" class="form-label">Donnez-nous votre avis</label>
+        <textarea name="content" id="content" class="form-control"></textarea>
+    </div>
+
+    <input type="submit" class="btn btn-success" value="Envoyer mon commentaire">
+</form>
+
+
+<?php if (count($comments)): ?>
+    <hr>
+
+    <h2>Commentaires (<?= count($comments) ?>)</h2>
+
+    <?php foreach ($comments as $comment): ?>
+        <div>
+            <div class="card mb-3">
+                <div class="card-header">
+                    <?= $comment['first_name'] ?>
+                </div>
+                <div class="card-body">
+                    <blockquote class="blockquote mb-0">
+                        <p><?= nl2br($comment['content']) ?></p>
+                        <footer class="blockquote-footer">Publié le <?= (new DateTime($comment['publishedAt']))->format('d/m/Y') ?></footer>
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+
+    <?php endforeach; ?>
+<?php endif; ?>
