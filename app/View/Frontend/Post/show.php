@@ -36,7 +36,6 @@ use Cacofony\Helper\AuthHelper;
     <h2>Commentaires (<?= count($comments) ?>)</h2>
 
     <?php foreach ($comments as $comment): ?>
-        <div>
             <div class="card mb-3">
                 <div class="card-header">
                     <?= $comment['first_name'] ?>
@@ -47,8 +46,12 @@ use Cacofony\Helper\AuthHelper;
                         <footer class="blockquote-footer">Publié le <?= (new DateTime($comment['publishedAt']))->format('d/m/Y') ?></footer>
                     </blockquote>
                 </div>
+
+                <?php if ($comment['authorId'] === AuthHelper::getLoggedUser()->id || AuthHelper::getLoggedUser()->is_admin): ?>
+                    <a href="/comment/<?= $comment['id'] ?>/delete" class="btn btn-danger">Supprimer</a>
+                <?php endif; ?>
+
             </div>
-        </div>
 
     <?php endforeach; ?>
 <?php endif; ?>

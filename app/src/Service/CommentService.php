@@ -21,4 +21,9 @@ class CommentService
         ]);
     }
 
+    public function delete(int $commentId) : bool
+    {
+        return $this->commentManager->remove($commentId);
+    }
+
 }
