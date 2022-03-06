@@ -1,6 +1,10 @@
 <?php
+
+use App\Entity\Comment;
+use App\Entity\Post;
 use Cacofony\Helper\AuthHelper;
-/** @var $post \App\Entity\Post */
+/** @var $post Post */
+/** @var $comments Comment[] */
 ?>
 
 <h1><?= $post->getTitle(); ?></h1>
@@ -13,3 +17,13 @@ use Cacofony\Helper\AuthHelper;
 
 
 <p><?= nl2br($post->getContent()); ?></p>
+
+<h2>Commentaires</h2>
+<?php foreach ($comments as $comment): ?>
+<div>
+    <h3><?= $comment['first_name'] ?></h3>
+    <span><?= $comment['publishedAt'] ?></span>
+    <p><?= $comment['content'] ?></p>
+</div>
+
+<?php endforeach; ?>

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Post;
+use App\Manager\CommentManager;
 use App\Manager\UserManager;
 use App\Service\DebugService;
 use App\Service\PostService;
@@ -24,6 +25,7 @@ class PostController extends BaseController
     public function getHome(PostManager $postManager, ExampleService $service)
     {
         $posts = $postManager->findAll();
+
         $this->render('Frontend/home', [
             'posts' => $posts,
             'strongText' => $service->getStrong('je suis du texte qui vient d\'un service en autowiring'),
@@ -38,7 +40,7 @@ class PostController extends BaseController
      * @param PostManager $postManager
      * @return void
      */
-    public function getShow(int $id, PostManager $postManager)
+    public function getShow(int $id, PostManager $postManager, CommentManager $commentManager)
     {
         /** @var Post $post */
         $post = $postManager->findOneBy('id', $id);
@@ -47,7 +49,14 @@ class PostController extends BaseController
             $this->HTTPResponse->redirect('/');
         }
 
-        $this->render("{$this->VIEW_PATH}/show", ['post' => $post], $post->getTitle());
+        $comments = $commentManager->getWithAuthorName($post->getId());
+
+        DebugService::debug($comments, false);
+
+        $this->render("{$this->VIEW_PATH}/show", [
+            'post' => $post,
+            'comments' => $comments
+        ], $post->getTitle());
     }
 
     /**
