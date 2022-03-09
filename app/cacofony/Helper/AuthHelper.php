@@ -24,6 +24,10 @@ class AuthHelper
     public static function getLoggedUser(): object|bool
     {
         try {
+            if (!isset($_SESSION['user_badge'])) {
+                return false;
+            }
+
             $user = JWT::decode($_SESSION['user_badge'], $_ENV['APP_SECRET'], ['HS256']);
         } catch (\Exception $e) {
             return false;

@@ -53,7 +53,7 @@ use Cacofony\Helper\AuthHelper;
                     </blockquote>
                 </div>
 
-                <?php if ($comment['authorId'] === AuthHelper::getLoggedUser()->id || AuthHelper::getLoggedUser()->is_admin): ?>
+                <?php if (AuthHelper::isLoggedIn() && ($comment['authorId'] === AuthHelper::getLoggedUser()->id || AuthHelper::getLoggedUser()->is_admin)): ?>
                     <a href="/comment/<?= $comment['id'] ?>/delete" class="btn btn-danger">Supprimer</a>
                 <?php endif; ?>
 
