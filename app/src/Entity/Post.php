@@ -12,7 +12,7 @@ class Post extends BaseEntity
     private DateTime $createdAt;
     private string $title;
     private string $content;
-    private string $picture_link;
+    private ?string $picture_link;
     private int $authorId;
 
     /**
@@ -111,16 +111,16 @@ class Post extends BaseEntity
     /**
      * @return string
      */
-    public function getPicture_link(): string
+    public function getPicture_link(): ?string
     {
         return $this->picture_link;
     }
 
     /**
-     * @param string $picture_link
+     * @param ?string $picture_link
      * @return Post
      */
-    public function setPicture_link(string $picture_link): self
+    public function setPicture_link(?string $picture_link): self
     {
         $this->picture_link = $picture_link;
         return $this;

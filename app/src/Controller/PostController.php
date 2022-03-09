@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Post;
 use App\Manager\CommentManager;
 use App\Manager\UserManager;
-use App\Service\DebugService;
 use App\Service\PostService;
 use Cacofony\BaseClasse\BaseController;
 use App\Manager\PostManager;
@@ -113,8 +112,9 @@ class PostController extends BaseController
 
         $title = $this->HTTPRequest->getRequest('title');
         $content = $this->HTTPRequest->getRequest('content');
+        $file = $_FILES['file'] ?? null;
 
-        if ($postService->update($id, $user, $title, $content)) {
+        if ($postService->update($id, $user, $title, $content, $file)) {
             $this->HTTPResponse->redirect("/article/{$id}?successMessage=L'article a bien été créer.");
         }
 

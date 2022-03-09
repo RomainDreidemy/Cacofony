@@ -46,13 +46,24 @@ class PostService
         return false;
     }
 
-    public function update(int $postId, User $user, string $title, string $content): Post|false
+    public function update(int $postId, User $user, string $title, string $content, ?array $file): Post|false
     {
         /** @var Post|false $post */
         $post = $this->postManager->findOneBy('id', $postId);
 
         if ($post && $this->hasUserAccess($post, $user)) {
-            return $this->postManager->update($postId, ['title' => $title, 'content' => $content]);
+            $filename = null;
+
+            if ($file && ($file['type'] === 'image/png' || $file['type'] === 'image/jpeg')) {
+                $filename = $file['name'];
+                move_uploaded_file($file['tmp_name'], __DIR__ . "/../../public/upload/{$filename}");
+            }
+
+            if(!is_null($filename)) {
+                return $this->postManager->update($postId, ['title' => $title, 'content' => $content, 'picture_link' => $filename]);
+            } else {
+                return $this->postManager->update($postId, ['title' => $title, 'content' => $content]);
+            }
         }
 
         return false;
