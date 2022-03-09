@@ -11,13 +11,21 @@ class PostService
     public function __construct(private PostManager $postManager)
     {}
 
-    public function create(string $title, string $content, int $authorId): Post|false
+    public function create(string $title, string $content, ?array $file, int $authorId): Post|false
     {
+        $filename = null;
+
+        if ($file && ($file['type'] === 'image/png' || $file['type'] === 'image/jpeg')) {
+            $filename = $file['name'];
+            move_uploaded_file($file['tmp_name'], __DIR__ . "/../../public/upload/{$filename}");
+        }
+
         $post = $this->postManager->create([
             'title' => $title,
             'content' => $content,
             'authorId' => $authorId,
-            'createdAt' => (new \DateTime('now'))->format('Y-m-d H:i:s')
+            'createdAt' => (new \DateTime('now'))->format('Y-m-d H:i:s'),
+            'picture_link' => $filename
         ]);
 
         if (!$post) {

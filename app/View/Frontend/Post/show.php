@@ -15,6 +15,10 @@ use Cacofony\Helper\AuthHelper;
     <a class="btn btn-warning" href="/article/<?= $post->getId() ?>/update">Mettre à jour l'article</a>
 <?php endif; ?>
 
+<div class="mt-3">
+    <img src="/upload/<?= $post->getPicture_link() ?>" class="img-fluid" alt="...">
+</div>
+
 
 <p><?= nl2br($post->getContent()); ?></p>
 
