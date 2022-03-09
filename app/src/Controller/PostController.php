@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Post;
 use App\Manager\CommentManager;
 use App\Manager\UserManager;
-use App\Service\DebugService;
 use App\Service\PostService;
 use Cacofony\BaseClasse\BaseController;
 use App\Manager\PostManager;
@@ -46,7 +45,7 @@ class PostController extends BaseController
         $post = $postManager->findOneBy('id', $id);
 
         if (!$post) {
-            $this->HTTPResponse->redirect('/');
+            $this->HTTPResponse->redirect('/?errorMessage=Cet article n\'existe plus.');
         }
 
         $comments = $commentManager->getWithAuthorName($post->getId());
@@ -71,7 +70,7 @@ class PostController extends BaseController
     public function postCreate(PostService $postService)
     {
         if (!AuthHelper::isLoggedIn()) {
-            $this->HTTPResponse->redirect('/');
+            $this->HTTPResponse->redirect('/' . '?errorMessage=Vous devez être connecté pour modifier un article.');
         }
 
         $user = AuthHelper::getLoggedUser();
@@ -81,7 +80,7 @@ class PostController extends BaseController
         $content = $this->HTTPRequest->getRequest('content');
 
         if($post = $postService->create($title, $content, $user->id)) {
-            $this->HTTPResponse->redirect('/article/' . $post->getId());
+            $this->HTTPResponse->redirect('/article/' . $post->getId() . '?successMessage=L\'article a bien été créer.');
         }
 
         $this->render("{$this->VIEW_PATH}/create", [], 'Création d\'un article');
@@ -93,7 +92,7 @@ class PostController extends BaseController
     public function getUpdate(int $id, PostManager $postManager)
     {
         if (!AuthHelper::isLoggedIn() || !$post = $postManager->findOneBy('id', $id)) {
-            $this->HTTPResponse->redirect('/');
+            $this->HTTPResponse->redirect('/?errorMessage=Une erreur est survenu.');
         }
 
         $this->render("{$this->VIEW_PATH}/update", ['post' => $post], 'Création d\'un article');
@@ -105,7 +104,7 @@ class PostController extends BaseController
     public function postUpdate(int $id, PostManager $postManager, PostService $postService, UserManager $userManager)
     {
         if (!AuthHelper::isLoggedIn()) {
-            $this->HTTPResponse->redirect('/');
+            $this->HTTPResponse->redirect('/?errorMessage=Vous devez être connecté pour modifier un article');
         }
 
         $user = $userManager->findOneBy('id', AuthHelper::getLoggedUser()->id);
@@ -114,7 +113,7 @@ class PostController extends BaseController
         $content = $this->HTTPRequest->getRequest('content');
 
         if ($postService->update($id, $user, $title, $content)) {
-            $this->HTTPResponse->redirect("/article/{$id}");
+            $this->HTTPResponse->redirect("/article/{$id}?successMessage=L'article a bien été créer.");
         }
 
 //        $this->render("{$this->VIEW_PATH}/update", ['post' => $post], 'Création d\'un article');
@@ -125,7 +124,7 @@ class PostController extends BaseController
      */
     public function getDelete(int $id, PostService $postService, UserManager $userManager) {
         if (!AuthHelper::isLoggedIn()) {
-            $this->HTTPResponse->redirect('/');
+            $this->HTTPResponse->redirect('/?errorMessage=Vous devez être connecté pour supprimer un article');
         }
 
         $user = AuthHelper::getLoggedUser();

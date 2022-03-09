@@ -19,7 +19,7 @@ class CommentController extends BaseController
     public function postComment(int $id, CommentService $commentService)
     {
         if (!AuthHelper::isLoggedIn()) {
-            $this->HTTPResponse->redirect('/');
+            $this->HTTPResponse->redirect('/?errorMessage=Vous devez être connecter pour ajouter un commentaire');
         }
 
         $user = AuthHelper::getLoggedUser();
@@ -28,7 +28,7 @@ class CommentController extends BaseController
 
         $commentService->create($id, $user->id, $content);
 
-        $this->HTTPResponse->redirect('/article/' . $id);
+        $this->HTTPResponse->redirect('/article/' . $id . '?successMessage=Votre commentaire a bien été ajouté.');
     }
 
     /**
@@ -37,7 +37,7 @@ class CommentController extends BaseController
     public function getCommentDelete(int $id, CommentService $commentService, CommentManager $commentManager)
     {
         if (!AuthHelper::isLoggedIn()) {
-            $this->HTTPResponse->redirect('/');
+            $this->HTTPResponse->redirect('/?errorMessage=Vous devez être connecté pour supprimer un commentaire.');
         }
 
         $user = AuthHelper::getLoggedUser();
@@ -46,11 +46,11 @@ class CommentController extends BaseController
         $comment = $commentManager->findOneBy('id', $id);
 
         if (!$comment || ($user->id !== $comment->getAuthorId() && !$user->is_admin)) {
-            $this->HTTPResponse->redirect('/');
+            $this->HTTPResponse->redirect('/?errorMessage=Vous ne pouvez pas supprimer ce commentaire.');
         }
 
         $commentService->delete($id);
 
-        $this->HTTPResponse->redirect('/article/' . $comment->getPostId());
+        $this->HTTPResponse->redirect('/article/' . $comment->getPostId() . '?successMessage=Le commentaire a bien été supprimé.');
     }
 }

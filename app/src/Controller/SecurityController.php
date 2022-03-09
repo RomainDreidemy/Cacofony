@@ -32,9 +32,9 @@ class SecurityController extends BaseController
         $password = $this->HTTPRequest->getRequest('password');
 
         if($authenticationService->auth($email, $password)) {
-            $this->HTTPResponse->redirect('/');
+            $this->HTTPResponse->redirect('/?successMessage=Vous êtes bien connecté.');
         } else {
-            $this->HTTPResponse->redirect('/login?incorrect');
+            $this->HTTPResponse->redirect('/login?errorMessage=Les informations fourni ne nous permette pas de vous connecter.');
         }
     }
 
